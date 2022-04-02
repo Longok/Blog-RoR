@@ -1,10 +1,13 @@
 class PostsController < ApplicationController
   before_action :authenticate_user! ,except: [:index, :welcome, :show]
+    
+  
     def welcome
     end
    
     def index
       @posts = Post.all.order('id DESC')
+      @user = User.all.order('id DESC')
     end
   
     def show
@@ -12,7 +15,7 @@ class PostsController < ApplicationController
     end
   
     def new
-      @post = Post.new
+      @post = current_user.posts.build
     end
   
     def edit
@@ -20,7 +23,8 @@ class PostsController < ApplicationController
     end
   
     def create
-      @post = Post.new(post_params)
+      # @post = Post.new(post_params)
+      @post = current_user.posts.build(post_params)
   
       if @post.save
         redirect_to @post, notice: "Post was successfully updated."
@@ -50,7 +54,7 @@ class PostsController < ApplicationController
     private
 
       def post_params
-        params.require(:post).permit(:title, :content)
+        params.require(:post).permit(:title, :content, :user_id)
       end
   end
   

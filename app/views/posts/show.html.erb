@@ -8,9 +8,9 @@
       </p>
 
       <p class="text-info">
-        <%= time_ago_in_words(@post.created_at) %> ago 
+        <%= @post.user.email %> <%= time_ago_in_words(@post.created_at) %> ago 
       </p>
-    <% if user_signed_in? %>
+    <% if @post.user == current_user %>
       <div>
         <%= link_to "Edit", edit_post_path(@post), class:"btn btn-outline-info btn-sm" %>
         <%= link_to "Delete", post_path(@post), class:"text-decoration-none btn btn-outline-danger btn-sm ", data: {
@@ -18,17 +18,19 @@
             turbo_confirm: "Are you sure?"
         } %>     
       </div>
+    <% end %>
 
+    <% if current_user %>
       <div class="mt-3">
         <h3> <%= @post.comments.count %> Comments </h3>
         <%= render @post.comments %>
 
         <%= render 'comments/form' %>      
-        <p> Join Discussion </p>  
       </div> 
-    <% end %>
-    <p> Join Discussion | <%= link_to "sign in", new_user_session_path %> </p>  
+    <% else %>
 
+    <p> Join Discussion | <%= link_to "sign in", new_user_session_path %> </p>  
+    <% end %>
     <p class="btn btn-outline-primary btn-sm mt-3"><%= link_to "Back", posts_path %></p>
   </div>
 
